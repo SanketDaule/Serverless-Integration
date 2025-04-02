@@ -1,0 +1,49 @@
+.PHONY: all deps
+
+ENV_VAR_FILE := "./terraform/$(ENVIRONMENT)/terraform.tfvars"
+BACKEND_CONF := "./terraform/$(ENVIRONMENT)/backend.conf"
+
+# Default target
+all: plan
+
+# Install pipenv (Python dependency manager)
+install-pip-deps:
+	@python -m pip install --no-input pipenv
+
+# Install the required dependencies for the backend (prod/dev)
+install-deps:
+	@echo "[INFO] Installing dependencies"
+	@cd backend && python -m pipenv install
+
+# Install the development dependencies for the backend
+install-dev-deps:
+	@echo "[INFO] Installing dependencies"
+	@cd backend && python -m pip install pipenv
+	@cd backend && python -m pipenv install --dev
+
+build-lambda-layer:
+	@cd backend && pipenv requirements > requirements.txt && \
+	mkdir -p python && \
+	pip install -r requirements.txt -t python/ && \
+	zip -q -r ../terraform/lambda_layer.zip python && \
+	rm -rf python requirements.txt
+
+init:
+	@echo "[INFO] Initialiasing terraform with config $(BACKEND_CONF), environment file $(ENV_VAR_FILE)"
+	@cd terraform && terraform init -reconfigure -backend-config=$(BACKEND_CONF) -no-color
+	
+plan:
+	@cd terraform && terraform plan -no-color -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE) -out=plan.out
+
+apply:
+	@cd terraform && terraform apply -no-color -auto-approve plan.out
+
+destroy:
+	@echo "[INFO] Destroying the environment using config $(BACKEND_CONF)"
+	@cd terraform && terraform destroy -no-color -auto-approve -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE)
+
+validate:
+	@echo "[INFO] Validating terraform code."
+	@cd terraform && terraform validate -no-color -var-file=$(ENV_VAR_FILE)
+
+
