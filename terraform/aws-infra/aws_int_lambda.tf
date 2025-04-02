@@ -15,10 +15,6 @@ resource "aws_lambda_function" "aws_int_lambda" {
   filename         = data.archive_file.aws_int_lambda_zip.output_path
   source_code_hash = data.archive_file.aws_int_lambda_zip.output_base64sha512
 
-  environment {
-    variables = {
-    }
-  }
 }
 
 resource "aws_iam_role" "aws_int_lambda_iam_role" {

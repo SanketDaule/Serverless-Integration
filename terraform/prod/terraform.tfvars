@@ -1,2 +1,2 @@
 environment   = "prod"
-project = "aws-integration-prod"
+project       = "aws-integration-prod"
