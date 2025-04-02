@@ -16,5 +16,8 @@ variable "instance_type" {
 }
 variable "environment" {
   type = string
+}
 
+variable "project" {
+  type = string
 }
