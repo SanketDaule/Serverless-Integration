@@ -4,9 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+requests = "*"
+aws-requests-auth = "*"
 
 [dev-packages]
+requests = "*"
+aws-requests-auth = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.11"
-python_full_version = "3.11.7"
