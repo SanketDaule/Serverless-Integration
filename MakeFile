@@ -6,20 +6,15 @@ BACKEND_CONF := "./terraform/$(ENVIRONMENT)/backend.conf"
 # Default target
 all: plan
 
-# Install pipenv (Python dependency manager)
-install-pip-deps:
-	@python -m pip install --no-input pipenv
-
-# Install the required dependencies for the backend (prod/dev)
+# Install pipenv and the required dependencies for the backend (prod/dev)
 install-deps:
-	@echo "[INFO] Installing dependencies"
-	@cd backend && python -m pipenv install
+	@echo "[INFO] Installing pipenv and dependencies in the backend"
+	@cd backend && python -m pip install --no-input pipenv && python -m pipenv install
 
 # Install the development dependencies for the backend
 install-dev-deps:
-	@echo "[INFO] Installing dependencies"
-	@cd backend && python -m pip install pipenv
-	@cd backend && python -m pipenv install --dev
+	@echo "[INFO] Installing pipenv and development dependencies in the backend"
+	@cd backend && python -m pip install --no-input pipenv && python -m pipenv install --dev
 
 build-lambda-layer:
 	@cd backend && pipenv requirements > requirements.txt && \
@@ -30,20 +25,20 @@ build-lambda-layer:
 
 init:
 	@echo "[INFO] Initialiasing terraform with config $(BACKEND_CONF), environment file $(ENV_VAR_FILE)"
-	@cd terraform && terraform init -reconfigure -backend-config=$(BACKEND_CONF) -no-color
+	@cd terraform/aws-infra && terraform init -reconfigure -backend-config=$(BACKEND_CONF) -no-color
 	
 plan:
-	@cd terraform && terraform plan -no-color -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE) -out=plan.out
+	@cd terraform/aws-infra && terraform plan -no-color -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE) -out=plan.out
 
 apply:
-	@cd terraform && terraform apply -no-color -auto-approve plan.out
+	@cd terraform/aws-infra && terraform apply -no-color -auto-approve plan.out
 
 destroy:
 	@echo "[INFO] Destroying the environment using config $(BACKEND_CONF)"
-	@cd terraform && terraform destroy -no-color -auto-approve -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE)
+	@cd terraform/aws-infra && terraform destroy -no-color -auto-approve -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE)
 
 validate:
 	@echo "[INFO] Validating terraform code."
-	@cd terraform && terraform validate -no-color -var-file=$(ENV_VAR_FILE)
+	@cd terraform/aws-infra && terraform validate -no-color -var-file=$(ENV_VAR_FILE)
 
 
