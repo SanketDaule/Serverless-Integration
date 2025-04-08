@@ -1,4 +1,4 @@
-name: CD
+name: Continuous Deployment to AWS 
 
 on:
   push:
@@ -13,20 +13,7 @@ permissions:
     id-token: write
     contents: read
 
-inputs:
-  environment:
-    description: "Environment to deploy to"
-    required: true
-    default: dev
-    type: choice
-    options:
-      - dev
-      - prod
-      
 jobs:
-
-  environment: ${{ inputs.environment }}
-
   deployment:
     name: deploy to aws account
     runs-on: ubuntu-latest
@@ -41,6 +28,6 @@ jobs:
         uses: ./.github/actions/deploy
         with:
           aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-          environment: ${{ inputs.environment }}
+          environment: dev
           
 
