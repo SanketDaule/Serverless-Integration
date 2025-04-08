@@ -1,0 +1,46 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, reopened, closed, synchronize]
+
+  workflow_dispatch:
+
+permissions:
+    id-token: write
+    contents: read
+
+inputs:
+  environment:
+    description: "Environment to deploy to"
+    required: true
+    default: dev
+    type: choice
+    options:
+      - dev
+      - prod
+      
+jobs:
+
+  environment: ${{ inputs.environment }}
+
+  deployment:
+    name: deploy to aws account
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - name: checkout 
+        uses: actions/checkout@v4
+
+      - name: deploy to aws account
+        uses: ./.github/actions/deploy
+        with:
+          aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+          environment: ${{ inputs.environment }}
+          
+
