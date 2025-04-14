@@ -29,7 +29,7 @@ runs:
         python-version: 3.11
 
     - name: Setup Terraform
-      uses: actions/setup-terraform@v1
+      uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: 1.8.4
 
