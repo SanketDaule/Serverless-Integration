@@ -40,5 +40,3 @@ destroy:
 validate:
 	@echo "[INFO] Validating terraform code."
 	@cd terraform/aws-infra && terraform validate -no-color -var-file=$(ENV_VAR_FILE)
-
-
