@@ -33,6 +33,12 @@ runs:
       with:
         terraform_version: 1.8.4
 
+    - name: Show files in current directory
+      run: |
+        pwd
+        ls -l
+      shell: bash
+
     - name: Install backend dep
       run: make install-deps
       shell: bash
