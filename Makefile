@@ -23,22 +23,20 @@ build-lambda-layer:
 	zip -q -r ../terraform/lambda_layer.zip python && \
 	rm -rf python requirements.txt
 
-init:
+terraform-init:
 	@echo "[INFO] Initialiasing terraform with config $(BACKEND_CONF), environment file $(ENV_VAR_FILE)"
 	@cd terraform/aws-infra && terraform init -reconfigure -backend-config=$(BACKEND_CONF) -no-color
 	
-plan:
+terraform-plan:
 	@cd terraform/aws-infra && terraform plan -no-color -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE) -out=plan.out
 
-apply:
+terraform-apply:
 	@cd terraform/aws-infra && terraform apply -no-color -auto-approve plan.out
 
-destroy:
+terraform-destroy:
 	@echo "[INFO] Destroying the environment using config $(BACKEND_CONF)"
 	@cd terraform/aws-infra && terraform destroy -no-color -auto-approve -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE)
 
-validate:
+terraform-validate:
 	@echo "[INFO] Validating terraform code."
 	@cd terraform/aws-infra && terraform validate -no-color -var-file=$(ENV_VAR_FILE)
-
-
