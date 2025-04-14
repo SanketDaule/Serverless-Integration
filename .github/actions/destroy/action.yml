@@ -1,0 +1,56 @@
+name: "Destroy"
+description: "destroys the infra within a specified environment"
+
+inputs:
+  environment: 
+    description: "Environment to deploy to"
+    required: true
+    default: dev
+ 
+  AWS_ACCOUNT_ID:
+    description: AWS Account ID
+    required: true
+    
+runs:
+  using: composite
+  steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::${{ inputs.AWS_ACCOUNT_ID }}:role/github-actions-code-build
+        aws-region: ap-south-1
+
+    - name: Setup python environment
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.11
+
+    - name: Setup Terraform
+      uses: actions/setup-terraform@v1
+      with:
+        terraform_version: 1.8.4
+
+    - name: Install backend dep
+      run: yarn --dev
+      working-directory: backend
+      shell: bash
+
+    - name: Build Lambda Layer
+      run: make build-lambda-layer
+      shell: bash
+
+    - name: Initialize Terraform
+      run:  make terraform-init
+      shell: bash
+      env:
+        ENVIRONMENT: ${{ inputs.environment }}
+
+    - name: run Terraform Desrtoy
+      run: make terraform-destroy
+      shell: bash
+      env:
+        ENVIRONMENT: ${{ inputs.environment }}
+      
