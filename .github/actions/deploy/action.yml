@@ -35,7 +35,6 @@ runs:
 
     - name: Install backend dep
       run: make install-deps
-      working-directory: backend
       shell: bash
 
     - name: Build Lambda Layer
