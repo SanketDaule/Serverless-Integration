@@ -14,7 +14,7 @@ permissions:
     contents: read
 
 jobs:
-  deployment:
+  deploy-dev:
     name: deploy to aws account
     runs-on: ubuntu-latest
 
