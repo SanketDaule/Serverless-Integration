@@ -25,7 +25,7 @@ build-lambda-layer:
 
 terraform-init:
 	@echo "[INFO] Initialiasing terraform with config $(BACKEND_CONF), environment file $(ENV_VAR_FILE)"
-	@cd terraform/aws-infra && terraform init -reconfigure -backend-config=$(BACKEND_CONF) -no-color
+	@cd terraform/aws-infra && terraform init -reconfigure -backend-config=../$(ENVIRONMENT)/backend.conf -no-color
 	
 terraform-plan:
 	@cd terraform/aws-infra && terraform plan -no-color -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE) -out=plan.out
