@@ -28,7 +28,7 @@ terraform-init:
 	@cd terraform/aws-infra && terraform init -reconfigure -backend-config=../$(ENVIRONMENT)/backend.conf -no-color
 	
 terraform-plan:
-	@cd terraform/aws-infra && terraform plan -no-color -var-file=terraform.tfvars -var-file=../$(ENVIRONMENT)/terraform.tfvars -out=plan.out
+	@cd terraform/aws-infra && terraform plan -no-color -var-file=../$(ENVIRONMENT)/terraform.tfvars -out=plan.out
 
 terraform-apply:
 	@cd terraform/aws-infra && terraform apply -no-color -auto-approve plan.out
