@@ -28,15 +28,15 @@ terraform-init:
 	@cd terraform/aws-infra && terraform init -reconfigure -backend-config=../$(ENVIRONMENT)/backend.conf -no-color
 	
 terraform-plan:
-	@cd terraform/aws-infra && terraform plan -no-color -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE) -out=plan.out
+	@cd terraform/aws-infra && terraform plan -no-color -var-file=terraform.tfvars -var-file=../$(ENVIRONMENT)/terraform.tfvars -out=plan.out
 
 terraform-apply:
 	@cd terraform/aws-infra && terraform apply -no-color -auto-approve plan.out
 
 terraform-destroy:
 	@echo "[INFO] Destroying the environment using config $(BACKEND_CONF)"
-	@cd terraform/aws-infra && terraform destroy -no-color -auto-approve -var-file=terraform.tfvars -var-file=$(ENV_VAR_FILE)
+	@cd terraform/aws-infra && terraform destroy -no-color -auto-approve -var-file=terraform.tfvars -var-file=../$(ENVIRONMENT)/terraform.tfvars
 
 terraform-validate:
 	@echo "[INFO] Validating terraform code."
-	@cd terraform/aws-infra && terraform validate -no-color -var-file=$(ENV_VAR_FILE)
+	@cd terraform/aws-infra && terraform validate -no-color -var-file=../$(ENVIRONMENT)/terraform.tfvars
