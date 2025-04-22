@@ -34,8 +34,7 @@ runs:
         terraform_version: 1.8.4
 
     - name: Install backend dep
-      run: yarn --dev
-      working-directory: backend
+      run: make install-deps
       shell: bash
 
     - name: Build Lambda Layer

@@ -48,7 +48,7 @@ runs:
         ENVIRONMENT: ${{ inputs.environment }}
 
     - name: Run Terraform plan
-      run: unbuffer make terraform-plan
+      run: make terraform-plan
       shell: bash
       env:
         ENVIRONMENT: ${{ inputs.environment }}
